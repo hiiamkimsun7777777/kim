@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta name="robots" content="noindex, nofollow, noarchive">
+
+    <title>Đăng nhập | Kim Sun</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background:
+                radial-gradient(
+                    circle at top left,
+                    rgba(255, 255, 255, 0.16),
+                    transparent 35%
+                ),
+                linear-gradient(135deg, #111827, #1f2937, #0f172a);
+            color: #ffffff;
+        }
+
+        button,
+        input {
+            font-family: inherit;
+        }
+
+        /* Màn hình đăng nhập */
+        #login-screen {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            width: 100%;
+            max-width: 420px;
+            padding: 38px 32px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 22px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+        }
+
+        .logo {
+            width: 76px;
+            height: 76px;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            color: #111827;
+            font-size: 28px;
+            font-weight: 800;
+            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.3);
+        }
+
+        .login-box h1 {
+            margin-bottom: 10px;
+            text-align: center;
+            font-size: 30px;
+        }
+
+        .description {
+            margin-bottom: 28px;
+            color: #d1d5db;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 9px;
+            color: #f3f4f6;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        #password {
+            width: 100%;
+            height: 52px;
+            padding: 0 52px 0 16px;
+            color: #111827;
+            background: #ffffff;
+            border: 2px solid transparent;
+            border-radius: 12px;
+            outline: none;
+            font-size: 16px;
+            transition: 0.25s;
+        }
+
+        #password:focus {
+            border-color: #fbbf24;
+            box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.18);
+        }
+
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 8px;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            color: #4b5563;
+            background: transparent;
+            border: 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 19px;
+        }
+
+        .toggle-password:hover {
+            background: #f3f4f6;
+        }
+
+        #login-button {
+            width: 100%;
+            height: 52px;
+            color: #111827;
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            border: 0;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            transition: 0.25s;
+        }
+
+        #login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(245, 158, 11, 0.28);
+        }
+
+        #login-button:disabled {
+            cursor: wait;
+            opacity: 0.7;
+            transform: none;
+        }
+
+        #message {
+            min-height: 24px;
+            margin-top: 16px;
+            text-align: center;
+            font-size: 14px;
+        }
+
+        #message.error {
+            color: #fca5a5;
+        }
+
+        #message.success {
+            color: #86efac;
+        }
+
+        /* Nội dung sau khi đăng nhập */
+        #protected-content {
+            display: none;
+            min-height: 100vh;
+            color: #111827;
+            background: #f3f4f6;
+        }
+
+        .site-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            padding: 18px 6%;
+            color: #ffffff;
+            background: #111827;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .site-name {
+            font-size: 23px;
+            font-weight: 800;
+        }
+
+        .logout-button {
+            padding: 10px 18px;
+            color: #111827;
+            background: #fbbf24;
+            border: 0;
+            border-radius: 9px;
+            cursor: pointer;
+            font-weight: 700;
+        }
+
+        .main-content {
+            width: min(1100px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 80px 0;
+        }
+
+        .welcome-card {
+            padding: 50px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 16px 45px rgba(15, 23, 42, 0.1);
+        }
+
+        .welcome-card h2 {
+            margin-bottom: 16px;
+            font-size: 36px;
+        }
+
+        .welcome-card p {
+            color: #4b5563;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 600px) {
+            .login-box {
+                padding: 32px 22px;
+            }
+
+            .welcome-card {
+                padding: 30px 22px;
+            }
+
+            .welcome-card h2 {
+                font-size: 28px;
+            }
+
+            .site-header {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Màn hình đăng nhập -->
+    <section id="login-screen">
+        <div class="login-box">
+            <div class="logo">KS</div>
+
+            <h1>Kim Sun</h1>
+
+            <p class="description">
+                Vui lòng nhập mật khẩu để truy cập trang web.
+            </p>
+
+            <form id="login-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="password">Mật khẩu truy cập</label>
+
+                    <div class="password-wrapper">
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Nhập mật khẩu"
+                            autocomplete="current-password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="toggle-password"
+                            id="toggle-password"
+                            aria-label="Hiện hoặc ẩn mật khẩu"
+                        >
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <button type="submit" id="login-button">
+                    Đăng nhập
+                </button>
+
+                <div id="message" aria-live="polite"></div>
+            </form>
+        </div>
+    </section>
+
+    <!--
+        Đặt toàn bộ nội dung cần bảo vệ trong phần này.
+
+        Lưu ý:
+        GitHub Pages là website tĩnh. Người có kỹ thuật vẫn có thể
+        xem mã nguồn hoặc thay đổi JavaScript để bỏ qua đăng nhập.
+    -->
+    <main id="protected-content">
+        <header class="site-header">
+            <div class="site-name">Kim Sun</div>
+
+            <button
+                type="button"
+                class="logout-button"
+                id="logout-button"
+            >
+                Đăng xuất
+            </button>
+        </header>
+
+        <div class="main-content">
+            <div class="welcome-card">
+                <h2>Chào mừng đến với Kim Sun</h2>
+
+                <p>
+                    Bạn đã nhập đúng mật khẩu và đăng nhập thành công.
+                    Hãy thay nội dung trong khu vực này bằng nội dung
+                    trang web của bạn.
+                </p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        /*
+         * Mã SHA-256 của mật khẩu.
+         * Mật khẩu dạng chữ thường không được ghi trong file này.
+         */
+        const PASSWORD_HASH =
+            "3650aa4672e5f5956ba784924b765ddae479f02b2451d8e62d1574b5fb92dea2";
+
+        const loginScreen = document.getElementById("login-screen");
+        const protectedContent =
+            document.getElementById("protected-content");
+
+        const loginForm = document.getElementById("login-form");
+        const passwordInput = document.getElementById("password");
+        const loginButton = document.getElementById("login-button");
+        const message = document.getElementById("message");
+
+        const togglePassword =
+            document.getElementById("toggle-password");
+
+        const logoutButton =
+            document.getElementById("logout-button");
+
+        /*
+         * Chuyển chuỗi thành mã SHA-256 bằng Web Crypto API.
+         */
+        async function sha256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+
+            const hashBuffer = await crypto.subtle.digest(
+                "SHA-256",
+                data
+            );
+
+            const hashArray = Array.from(
+                new Uint8Array(hashBuffer)
+            );
+
+            return hashArray
+                .map(byte => byte.toString(16).padStart(2, "0"))
+                .join("");
+        }
+
+        function showProtectedContent() {
+            loginScreen.style.display = "none";
+            protectedContent.style.display = "block";
+
+            document.title = "Kim Sun";
+        }
+
+        function showLoginScreen() {
+            protectedContent.style.display = "none";
+            loginScreen.style.display = "flex";
+
+            document.title = "Đăng nhập | Kim Sun";
+
+            passwordInput.value = "";
+            passwordInput.focus();
+        }
+
+        /*
+         * Chỉ lưu trạng thái đăng nhập trong phiên trình duyệt.
+         * Khi đóng trình duyệt, người dùng sẽ phải đăng nhập lại.
+         */
+        if (sessionStorage.getItem("kimSunAuthenticated") === "true") {
+            showProtectedContent();
+        } else {
+            showLoginScreen();
+        }
+
+        loginForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const password = passwordInput.value;
+
+            if (!password) {
+                message.className = "error";
+                message.textContent = "Vui lòng nhập mật khẩu.";
+                return;
+            }
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Đang kiểm tra...";
+
+            try {
+                const enteredHash = await sha256(password);
+
+                if (enteredHash === PASSWORD_HASH) {
+                    message.className = "success";
+                    message.textContent = "Đăng nhập thành công.";
+
+                    sessionStorage.setItem(
+                        "kimSunAuthenticated",
+                        "true"
+                    );
+
+                    setTimeout(showProtectedContent, 300);
+                } else {
+                    message.className = "error";
+                    message.textContent =
+                        "Mật khẩu không chính xác. Vui lòng thử lại.";
+
+                    passwordInput.value = "";
+                    passwordInput.focus();
+                }
+            } catch (error) {
+                console.error(error);
+
+                message.className = "error";
+                message.textContent =
+                    "Trình duyệt không hỗ trợ kiểm tra mật khẩu.";
+            } finally {
+                loginButton.disabled = false;
+                loginButton.textContent = "Đăng nhập";
+            }
+        });
+
+        togglePassword.addEventListener("click", function () {
+            const isPassword =
+                passwordInput.type === "password";
+
+            passwordInput.type = isPassword
+                ? "text"
+                : "password";
+
+            togglePassword.textContent = isPassword
+                ? "🙈"
+                : "👁";
+        });
+
+        logoutButton.addEventListener("click", function () {
+            sessionStorage.removeItem("kimSunAuthenticated");
+            showLoginScreen();
+        });
+    </script>
+
+</body>
+</html>
