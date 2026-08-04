@@ -52,8 +52,14 @@ iframe{width:100%;height:calc(100vh - 58px);border:0;background:#fff}
 </section>
 
 <section id="viewer">
-  <div class="viewerbar"><span id="viewerTitle"></span><button id="closeViewer">Đóng</button></div>
-  <iframe id="frame" sandbox="allow-scripts allow-same-origin allow-modals allow-forms"></iframe>
+  <div class="viewerbar">
+    <span id="viewerTitle"></span>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button id="openPdfTab" type="button" style="display:none">Mở tab mới</button>
+      <button id="closeViewer" type="button">Đóng</button>
+    </div>
+  </div>
+  <iframe id="frame" title="Trình xem tài liệu"></iframe>
 </section>
 
 <script>
@@ -142,12 +148,16 @@ function prepareDocumentHtml(html){
 }
 
 function clearViewerContent(){
+  $("#openPdfTab").style.display="none";
+  $("#openPdfTab").onclick=null;
+
+  $("#frame").removeAttribute("src");
+  $("#frame").srcdoc="";
+
   if(activeObjectUrl){
     URL.revokeObjectURL(activeObjectUrl);
     activeObjectUrl="";
   }
-  $("#frame").removeAttribute("src");
-  $("#frame").srcdoc="";
 }
 
 function render(){
@@ -176,8 +186,15 @@ async function openDoc(i){
       const bytes=await loadEncryptedBytes(x.file,sessionPassword);
       const blob=new Blob([bytes],{type:"application/pdf"});
       activeObjectUrl=URL.createObjectURL(blob);
+
+      const pdfUrl=activeObjectUrl+"#toolbar=1&navpanes=1&view=FitH";
       $("#frame").srcdoc="";
-      $("#frame").src=activeObjectUrl+"#toolbar=1&navpanes=1&view=FitH";
+      $("#frame").src=pdfUrl;
+
+      $("#openPdfTab").style.display="inline-block";
+      $("#openPdfTab").onclick=()=>{
+        window.open(pdfUrl,"_blank","noopener,noreferrer");
+      };
     }else{
       const documentHtml=await loadEncryptedText(x.file,sessionPassword);
       $("#frame").srcdoc=prepareDocumentHtml(documentHtml);
