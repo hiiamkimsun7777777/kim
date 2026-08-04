@@ -89,14 +89,75 @@ function render(){
     $("#grid").appendChild(el);
   });
 }
+function prepareDocumentHtml(html){
+  const navigationFix = `
+<script>
+(function () {
+  function decodeTarget(value) {
+    try { return decodeURIComponent(value); }
+    catch (e) { return value; }
+  }
+
+  document.addEventListener("click", function (event) {
+    const link = event.target.closest("a[href]");
+    if (!link) return;
+
+    const href = link.getAttribute("href") || "";
+
+    // Chỉ xử lý liên kết mục lục nội bộ như #mo-dau, #tong-ket...
+    if (href.charAt(0) === "#") {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const id = decodeTarget(href.slice(1));
+      if (!id) {
+        document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+
+      const target =
+        document.getElementById(id) ||
+        document.querySelector('[name="' + CSS.escape(id) + '"]');
+
+      if (target) {
+        target.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+
+        // Chỉ lưu vị trí trong lịch sử của iframe, không làm tải lại trang chính.
+        try {
+          history.replaceState(null, "", "#" + encodeURIComponent(id));
+        } catch (e) {}
+      }
+    }
+  }, true);
+
+  // Ngăn mã trong bài viết chuyển trang cha về màn hình đăng nhập.
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('a[target="_top"],a[target="_parent"]').forEach(function (link) {
+      link.removeAttribute("target");
+    });
+  });
+})();
+<\/script>`;
+
+  if (/<\/body\s*>/i.test(html)) {
+    return html.replace(/<\/body\s*>/i, navigationFix + "</body>");
+  }
+
+  return html + navigationFix;
+}
+
 async function openDoc(i){
   const x=manifest[i];
   $("#viewerTitle").textContent=x.title;
   $("#viewer").style.display="block";
   $("#frame").srcdoc="<p style='font-family:Arial;padding:30px'>Đang giải mã nội dung...</p>";
+
   try{
-    const html=await loadEncrypted(x.file,sessionPassword);
-    $("#frame").srcdoc=html;
+    const documentHtml=await loadEncrypted(x.file,sessionPassword);
+    $("#frame").srcdoc=prepareDocumentHtml(documentHtml);
   }catch(e){
     $("#frame").srcdoc="<p style='font-family:Arial;padding:30px;color:#b91c1c'>Không thể mở tài liệu.</p>";
   }
