@@ -61,34 +61,36 @@ const MANIFEST="6228ecd2436810ca844cde6a.dat";
 const $=s=>document.querySelector(s);
 let sessionPassword="";
 let manifest=[];
+let activeObjectUrl="";
 
 function b64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
-async function decryptPayload(payload,password){
+
+async function decryptPayloadBytes(payload,password){
   const enc=new TextEncoder();
-  const keyMaterial=await crypto.subtle.importKey("raw",enc.encode(password),{name:"PBKDF2"},false,["deriveKey"]);
+  const keyMaterial=await crypto.subtle.importKey(
+    "raw",enc.encode(password),{name:"PBKDF2"},false,["deriveKey"]
+  );
   const key=await crypto.subtle.deriveKey(
     {name:"PBKDF2",salt:b64(payload.s),iterations:310000,hash:"SHA-256"},
     keyMaterial,{name:"AES-GCM",length:256},false,["decrypt"]
   );
-  const plain=await crypto.subtle.decrypt({name:"AES-GCM",iv:b64(payload.i)},key,b64(payload.d));
-  return new TextDecoder().decode(plain);
+  const plain=await crypto.subtle.decrypt(
+    {name:"AES-GCM",iv:b64(payload.i)},key,b64(payload.d)
+  );
+  return new Uint8Array(plain);
 }
-async function loadEncrypted(name,password){
+
+async function loadEncryptedBytes(name,password){
   const res=await fetch(name,{cache:"no-store"});
   if(!res.ok) throw new Error("Không tải được dữ liệu");
-  return decryptPayload(await res.json(),password);
+  return decryptPayloadBytes(await res.json(),password);
 }
-function render(){
-  $("#grid").innerHTML="";
-  manifest.forEach((x,i)=>{
-    const el=document.createElement("article");
-    el.className="item";
-    el.innerHTML=`<div class="ico">📘</div><h2></h2><button type="button">Mở tài liệu</button>`;
-    el.querySelector("h2").textContent=x.title;
-    el.querySelector("button").onclick=()=>openDoc(i);
-    $("#grid").appendChild(el);
-  });
+
+async function loadEncryptedText(name,password){
+  const bytes=await loadEncryptedBytes(name,password);
+  return new TextDecoder().decode(bytes);
 }
+
 function prepareDocumentHtml(html){
   const navigationFix = `
 <script>
@@ -101,17 +103,15 @@ function prepareDocumentHtml(html){
   document.addEventListener("click", function (event) {
     const link = event.target.closest("a[href]");
     if (!link) return;
-
     const href = link.getAttribute("href") || "";
 
-    // Chỉ xử lý liên kết mục lục nội bộ như #mo-dau, #tong-ket...
     if (href.charAt(0) === "#") {
       event.preventDefault();
       event.stopPropagation();
 
       const id = decodeTarget(href.slice(1));
       if (!id) {
-        document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+        document.documentElement.scrollTo({top:0,behavior:"smooth"});
         return;
       }
 
@@ -120,20 +120,13 @@ function prepareDocumentHtml(html){
         document.querySelector('[name="' + CSS.escape(id) + '"]');
 
       if (target) {
-        target.scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-
-        // Chỉ lưu vị trí trong lịch sử của iframe, không làm tải lại trang chính.
-        try {
-          history.replaceState(null, "", "#" + encodeURIComponent(id));
-        } catch (e) {}
+        target.scrollIntoView({behavior:"smooth",block:"start"});
+        try { history.replaceState(null,"","#"+encodeURIComponent(id)); }
+        catch (e) {}
       }
     }
   }, true);
 
-  // Ngăn mã trong bài viết chuyển trang cha về màn hình đăng nhập.
   document.addEventListener("DOMContentLoaded", function () {
     document.querySelectorAll('a[target="_top"],a[target="_parent"]').forEach(function (link) {
       link.removeAttribute("target");
@@ -143,31 +136,66 @@ function prepareDocumentHtml(html){
 <\/script>`;
 
   if (/<\/body\s*>/i.test(html)) {
-    return html.replace(/<\/body\s*>/i, navigationFix + "</body>");
+    return html.replace(/<\/body\s*>/i,navigationFix+"</body>");
   }
+  return html+navigationFix;
+}
 
-  return html + navigationFix;
+function clearViewerContent(){
+  if(activeObjectUrl){
+    URL.revokeObjectURL(activeObjectUrl);
+    activeObjectUrl="";
+  }
+  $("#frame").removeAttribute("src");
+  $("#frame").srcdoc="";
+}
+
+function render(){
+  $("#grid").innerHTML="";
+  manifest.forEach((x,i)=>{
+    const el=document.createElement("article");
+    el.className="item";
+    const icon=x.type==="pdf"?"📕":"📘";
+    const buttonText=x.type==="pdf"?"Xem PDF":"Mở tài liệu";
+    el.innerHTML=`<div class="ico">${icon}</div><h2></h2><button type="button">${buttonText}</button>`;
+    el.querySelector("h2").textContent=x.title;
+    el.querySelector("button").onclick=()=>openDoc(i);
+    $("#grid").appendChild(el);
+  });
 }
 
 async function openDoc(i){
   const x=manifest[i];
+  clearViewerContent();
   $("#viewerTitle").textContent=x.title;
   $("#viewer").style.display="block";
   $("#frame").srcdoc="<p style='font-family:Arial;padding:30px'>Đang giải mã nội dung...</p>";
 
   try{
-    const documentHtml=await loadEncrypted(x.file,sessionPassword);
-    $("#frame").srcdoc=prepareDocumentHtml(documentHtml);
+    if(x.type==="pdf"){
+      const bytes=await loadEncryptedBytes(x.file,sessionPassword);
+      const blob=new Blob([bytes],{type:"application/pdf"});
+      activeObjectUrl=URL.createObjectURL(blob);
+      $("#frame").srcdoc="";
+      $("#frame").src=activeObjectUrl+"#toolbar=1&navpanes=1&view=FitH";
+    }else{
+      const documentHtml=await loadEncryptedText(x.file,sessionPassword);
+      $("#frame").srcdoc=prepareDocumentHtml(documentHtml);
+    }
   }catch(e){
     $("#frame").srcdoc="<p style='font-family:Arial;padding:30px;color:#b91c1c'>Không thể mở tài liệu.</p>";
   }
 }
+
 $("#form").addEventListener("submit",async e=>{
   e.preventDefault();
   const pass=$("#password").value;
-  $("#submit").disabled=true; $("#submit").textContent="Đang kiểm tra..."; $("#msg").textContent="";
+  $("#submit").disabled=true;
+  $("#submit").textContent="Đang kiểm tra...";
+  $("#msg").textContent="";
+
   try{
-    manifest=JSON.parse(await loadEncrypted(MANIFEST,pass));
+    manifest=JSON.parse(await loadEncryptedText(MANIFEST,pass));
     sessionPassword=pass;
     render();
     $("#login").style.display="none";
@@ -175,18 +203,35 @@ $("#form").addEventListener("submit",async e=>{
     $("#password").value="";
   }catch(err){
     $("#msg").textContent="Mật khẩu không chính xác.";
-    $("#password").value=""; $("#password").focus();
+    $("#password").value="";
+    $("#password").focus();
   }finally{
-    $("#submit").disabled=false; $("#submit").textContent="Đăng nhập";
+    $("#submit").disabled=false;
+    $("#submit").textContent="Đăng nhập";
   }
 });
-$("#closeViewer").onclick=()=>{$("#viewer").style.display="none";$("#frame").srcdoc="";};
-$("#logout").onclick=()=>{
-  sessionPassword=""; manifest=[]; $("#grid").innerHTML="";
-  $("#app").style.display="none"; $("#viewer").style.display="none";
-  $("#login").style.display="grid"; $("#password").focus();
+
+$("#closeViewer").onclick=()=>{
+  clearViewerContent();
+  $("#viewer").style.display="none";
 };
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#viewer").style.display==="block")$("#closeViewer").click();});
+
+$("#logout").onclick=()=>{
+  clearViewerContent();
+  sessionPassword="";
+  manifest=[];
+  $("#grid").innerHTML="";
+  $("#app").style.display="none";
+  $("#viewer").style.display="none";
+  $("#login").style.display="grid";
+  $("#password").focus();
+};
+
+document.addEventListener("keydown",e=>{
+  if(e.key==="Escape"&&$("#viewer").style.display==="block"){
+    $("#closeViewer").click();
+  }
+});
 </script>
 </body>
 </html>
