@@ -6,90 +6,1102 @@
 <meta name="robots" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
 <meta name="googlebot" content="noindex,nofollow,noarchive,nosnippet,noimageindex">
 <meta name="referrer" content="no-referrer">
+<meta name="color-scheme" content="light">
 <title>Kim Sun</title>
+
 <style>
-*{box-sizing:border-box} body{margin:0;min-height:100vh;font-family:Arial,sans-serif;background:#0f172a;color:#fff}
-button,input{font:inherit} #login{min-height:100vh;display:grid;place-items:center;padding:20px}
-.card{width:min(430px,100%);padding:34px;border:1px solid #334155;border-radius:22px;background:#172033;box-shadow:0 25px 70px #0008}
-.logo{width:72px;height:72px;margin:0 auto 18px;display:grid;place-items:center;border-radius:50%;background:#f4b942;color:#151515;font-weight:900;font-size:26px}
-h1{text-align:center;margin:0 0 8px} .sub{text-align:center;color:#b8c3d5;margin:0 0 24px;line-height:1.6}
-label{display:block;margin-bottom:8px;font-weight:700} .pw{display:flex;gap:8px}
-input{width:100%;height:50px;border:1px solid #475569;border-radius:12px;padding:0 14px;background:#fff;color:#111;outline:none}
-.primary{width:100%;height:50px;margin-top:14px;border:0;border-radius:12px;background:#f4b942;color:#171717;font-weight:800;cursor:pointer}
-.msg{min-height:22px;margin-top:13px;text-align:center;color:#fca5a5}
-#app{display:none;min-height:100vh;background:#f4f6f9;color:#172033}
-header{display:flex;justify-content:space-between;align-items:center;padding:16px 5%;background:#101827;color:#fff}
-header strong{font-size:22px} .logout{border:0;border-radius:10px;padding:10px 15px;background:#f4b942;font-weight:800;cursor:pointer}
-main{width:min(1100px,calc(100% - 30px));margin:auto;padding:35px 0}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.item{padding:24px;border:1px solid #d9e0e9;border-radius:18px;background:#fff;box-shadow:0 10px 30px #0f172a12}
-.item .ico{font-size:32px} .item h2{font-size:19px;line-height:1.4;min-height:54px}
-.item button{width:100%;border:0;border-radius:10px;padding:12px;background:#173f68;color:#fff;font-weight:800;cursor:pointer}
-#viewer{display:none;position:fixed;inset:0;z-index:20;background:#fff}
-.viewerbar{height:58px;display:flex;align-items:center;justify-content:space-between;gap:15px;padding:0 14px;background:#101827;color:#fff}
-.viewerbar span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:700}
-.viewerbar button{border:0;border-radius:9px;padding:9px 13px;background:#f4b942;font-weight:800;cursor:pointer}
-iframe{width:100%;height:calc(100vh - 58px);border:0;background:#fff}
-@media(max-width:800px){.grid{grid-template-columns:1fr} .item h2{min-height:0}}
+:root{
+  --navy:#0d1728;
+  --navy-2:#14233a;
+  --blue:#174d7c;
+  --blue-hover:#103c64;
+  --gold:#f5bd49;
+  --gold-hover:#eeb036;
+  --bg:#f3f6fa;
+  --surface:#ffffff;
+  --surface-soft:#f8fafc;
+  --text:#132033;
+  --muted:#66758a;
+  --line:#dce4ee;
+  --danger:#bb2d3b;
+  --shadow:0 12px 35px rgba(15,31,52,.08);
+  --shadow-hover:0 20px 46px rgba(15,31,52,.15);
+  --radius:22px;
+  --max:1280px;
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:"Segoe UI",Arial,sans-serif;
+  color:var(--text);
+  background:var(--bg);
+}
+
+button,input{font:inherit}
+
+button{touch-action:manipulation}
+
+[hidden]{display:none!important}
+
+/* =========================
+   MÀN HÌNH ĐĂNG NHẬP
+========================= */
+#login{
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  padding:22px;
+  color:#fff;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(245,189,73,.18),transparent 28rem),
+    radial-gradient(circle at 92% 90%,rgba(54,129,191,.20),transparent 30rem),
+    linear-gradient(145deg,#091321,#12233a 55%,#0d1b2d);
+}
+
+.login-shell{
+  width:min(1020px,100%);
+  display:grid;
+  grid-template-columns:minmax(0,1.08fr) minmax(360px,.72fr);
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:30px;
+  background:rgba(255,255,255,.055);
+  box-shadow:0 35px 100px rgba(0,0,0,.4);
+  backdrop-filter:blur(18px);
+}
+
+.login-intro{
+  position:relative;
+  overflow:hidden;
+  padding:clamp(40px,7vw,76px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:
+    linear-gradient(140deg,rgba(23,77,124,.88),rgba(11,30,52,.94)),
+    radial-gradient(circle at 75% 10%,rgba(245,189,73,.34),transparent 18rem);
+}
+
+.login-intro::before,
+.login-intro::after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  pointer-events:none;
+}
+
+.login-intro::before{
+  width:300px;
+  height:300px;
+  right:-140px;
+  top:-130px;
+  background:rgba(255,255,255,.07);
+}
+
+.login-intro::after{
+  width:220px;
+  height:220px;
+  left:-100px;
+  bottom:-120px;
+  background:rgba(245,189,73,.12);
+}
+
+.brand-lockup{
+  position:relative;
+  z-index:1;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  margin-bottom:42px;
+}
+
+.brand-mark{
+  width:52px;
+  height:52px;
+  display:grid;
+  place-items:center;
+  border-radius:16px;
+  color:#172033;
+  background:linear-gradient(145deg,#ffd471,var(--gold));
+  font-size:19px;
+  font-weight:900;
+  box-shadow:0 12px 28px rgba(245,189,73,.24);
+}
+
+.brand-name{
+  font-size:27px;
+  font-weight:900;
+  letter-spacing:-.03em;
+}
+
+.login-intro h1{
+  position:relative;
+  z-index:1;
+  max-width:520px;
+  margin:0 0 18px;
+  font-size:clamp(2.2rem,5vw,4.2rem);
+  line-height:1.06;
+  letter-spacing:-.055em;
+}
+
+.login-intro p{
+  position:relative;
+  z-index:1;
+  max-width:540px;
+  margin:0;
+  color:rgba(255,255,255,.76);
+  font-size:1.06rem;
+  line-height:1.75;
+}
+
+.login-panel{
+  padding:clamp(34px,5vw,55px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  background:rgba(12,24,42,.8);
+}
+
+.login-panel h2{
+  margin:0 0 8px;
+  font-size:1.65rem;
+  letter-spacing:-.025em;
+}
+
+.login-note{
+  margin:0 0 27px;
+  color:#aebbcf;
+  line-height:1.65;
+}
+
+.field-label{
+  display:block;
+  margin-bottom:9px;
+  color:#eaf0f8;
+  font-size:.92rem;
+  font-weight:750;
+}
+
+.password-wrap{position:relative}
+
+.password-input{
+  width:100%;
+  height:54px;
+  padding:0 52px 0 16px;
+  color:#142033;
+  background:#fff;
+  border:2px solid transparent;
+  border-radius:14px;
+  outline:none;
+  transition:.2s ease;
+}
+
+.password-input:focus{
+  border-color:var(--gold);
+  box-shadow:0 0 0 4px rgba(245,189,73,.17);
+}
+
+.toggle-password{
+  position:absolute;
+  right:7px;
+  top:50%;
+  transform:translateY(-50%);
+  width:41px;
+  height:41px;
+  display:grid;
+  place-items:center;
+  border:0;
+  border-radius:10px;
+  color:#526176;
+  background:transparent;
+  cursor:pointer;
+}
+
+.toggle-password:hover{background:#edf2f7}
+
+.login-button{
+  width:100%;
+  height:54px;
+  margin-top:16px;
+  border:0;
+  border-radius:14px;
+  color:#142033;
+  background:linear-gradient(135deg,#ffd16d,var(--gold));
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 12px 28px rgba(245,189,73,.17);
+  transition:.2s ease;
+}
+
+.login-button:hover{
+  transform:translateY(-2px);
+  background:linear-gradient(135deg,#ffd77d,var(--gold-hover));
+}
+
+.login-button:disabled{
+  cursor:wait;
+  opacity:.7;
+  transform:none;
+}
+
+.msg{
+  min-height:22px;
+  margin-top:14px;
+  color:#ffadb5;
+  text-align:center;
+  font-size:.92rem;
+}
+
+/* =========================
+   THƯ VIỆN
+========================= */
+#app{
+  display:none;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 0 0,rgba(23,77,124,.055),transparent 30rem),
+    var(--bg);
+}
+
+.app-header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  color:#fff;
+  background:rgba(13,23,40,.97);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  backdrop-filter:blur(16px);
+}
+
+.app-header-inner{
+  width:min(var(--max),calc(100% - 36px));
+  min-height:76px;
+  margin:auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+}
+
+.app-brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.app-brand .brand-mark{
+  width:42px;
+  height:42px;
+  border-radius:13px;
+  font-size:16px;
+}
+
+.app-brand strong{
+  font-size:22px;
+  letter-spacing:-.025em;
+}
+
+.header-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.header-count{
+  padding:8px 12px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  color:#c8d3e2;
+  background:rgba(255,255,255,.055);
+  font-size:.86rem;
+  font-weight:700;
+}
+
+.logout{
+  min-height:44px;
+  padding:0 17px;
+  border:0;
+  border-radius:12px;
+  color:#172033;
+  background:var(--gold);
+  font-weight:900;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.logout:hover{
+  transform:translateY(-1px);
+  background:var(--gold-hover);
+}
+
+.library-main{
+  width:min(var(--max),calc(100% - 36px));
+  margin:auto;
+  padding:42px 0 70px;
+}
+
+.library-hero{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  align-items:end;
+  gap:24px;
+  margin-bottom:25px;
+}
+
+.library-eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:9px;
+  color:var(--blue);
+  font-size:.82rem;
+  font-weight:900;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+}
+
+.library-title{
+  margin:0;
+  font-size:clamp(2rem,4vw,3.55rem);
+  line-height:1.08;
+  letter-spacing:-.05em;
+}
+
+.library-description{
+  max-width:720px;
+  margin:12px 0 0;
+  color:var(--muted);
+  font-size:1.03rem;
+  line-height:1.65;
+}
+
+.library-stat{
+  min-width:160px;
+  padding:20px 22px;
+  border:1px solid var(--line);
+  border-radius:19px;
+  background:var(--surface);
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+
+.library-stat strong{
+  display:block;
+  color:var(--blue);
+  font-size:2rem;
+  line-height:1;
+}
+
+.library-stat span{
+  display:block;
+  margin-top:7px;
+  color:var(--muted);
+  font-size:.86rem;
+  font-weight:700;
+}
+
+/* SEARCH */
+.search-panel{
+  position:sticky;
+  top:88px;
+  z-index:8;
+  margin-bottom:26px;
+  padding:14px;
+  display:grid;
+  grid-template-columns:minmax(260px,1fr) auto;
+  gap:13px;
+  border:1px solid var(--line);
+  border-radius:20px;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 12px 32px rgba(15,31,52,.075);
+  backdrop-filter:blur(15px);
+}
+
+.search-box{
+  position:relative;
+  min-width:0;
+}
+
+.search-icon{
+  position:absolute;
+  left:16px;
+  top:50%;
+  transform:translateY(-50%);
+  width:20px;
+  height:20px;
+  color:#718096;
+  pointer-events:none;
+}
+
+#searchInput{
+  width:100%;
+  height:50px;
+  padding:0 50px 0 47px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  color:var(--text);
+  background:var(--surface-soft);
+  outline:none;
+  transition:.2s ease;
+}
+
+#searchInput::placeholder{color:#8794a5}
+
+#searchInput:focus{
+  border-color:#78a5ca;
+  background:#fff;
+  box-shadow:0 0 0 4px rgba(23,77,124,.09);
+}
+
+.clear-search{
+  position:absolute;
+  right:7px;
+  top:50%;
+  transform:translateY(-50%);
+  width:38px;
+  height:38px;
+  display:none;
+  place-items:center;
+  border:0;
+  border-radius:10px;
+  color:#64748b;
+  background:transparent;
+  cursor:pointer;
+  font-size:21px;
+}
+
+.clear-search.show{display:grid}
+.clear-search:hover{background:#e9eff5}
+
+.filter-group{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  padding:5px;
+  border:1px solid var(--line);
+  border-radius:14px;
+  background:var(--surface-soft);
+}
+
+.filter-btn{
+  min-height:38px;
+  padding:0 14px;
+  border:0;
+  border-radius:10px;
+  color:#637186;
+  background:transparent;
+  font-size:.9rem;
+  font-weight:800;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+.filter-btn:hover{
+  color:var(--blue);
+  background:#eaf1f7;
+}
+
+.filter-btn.active{
+  color:#fff;
+  background:var(--blue);
+  box-shadow:0 7px 17px rgba(23,77,124,.2);
+}
+
+.results-row{
+  margin:0 0 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  color:var(--muted);
+  font-size:.92rem;
+}
+
+.results-row strong{color:var(--text)}
+
+.keyboard-hint{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+}
+
+.keyboard-hint kbd{
+  padding:3px 7px;
+  border:1px solid #ccd5e0;
+  border-bottom-width:2px;
+  border-radius:6px;
+  color:#526176;
+  background:#fff;
+  font-family:inherit;
+  font-size:.75rem;
+  font-weight:800;
+}
+
+/* CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:20px;
+}
+
+.item{
+  position:relative;
+  min-height:260px;
+  padding:23px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  background:var(--surface);
+  box-shadow:var(--shadow);
+  transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease;
+  animation:cardIn .35s ease both;
+}
+
+.item::before{
+  content:"";
+  position:absolute;
+  inset:0 0 auto;
+  height:4px;
+  opacity:0;
+  background:linear-gradient(90deg,var(--blue),#4ca7dd,var(--gold));
+  transition:.22s ease;
+}
+
+.item:hover{
+  transform:translateY(-5px);
+  border-color:#c3d3e2;
+  box-shadow:var(--shadow-hover);
+}
+
+.item:hover::before{opacity:1}
+
+.card-top{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.doc-icon{
+  position:relative;
+  width:51px;
+  height:58px;
+  flex:0 0 51px;
+  display:flex;
+  align-items:flex-end;
+  justify-content:center;
+  padding-bottom:8px;
+  border-radius:9px 9px 7px 7px;
+  color:#fff;
+  background:linear-gradient(145deg,#38bdf8,#1676b7);
+  box-shadow:0 10px 24px rgba(25,119,182,.22);
+  font-size:.65rem;
+  font-weight:900;
+  letter-spacing:.05em;
+}
+
+.doc-icon::before{
+  content:"";
+  position:absolute;
+  right:0;
+  top:0;
+  width:15px;
+  height:15px;
+  border-radius:0 8px 0 5px;
+  background:rgba(255,255,255,.65);
+  clip-path:polygon(0 0,100% 100%,0 100%);
+}
+
+.doc-icon.pdf{
+  background:linear-gradient(145deg,#f87171,#be2535);
+  box-shadow:0 10px 24px rgba(190,37,53,.2);
+}
+
+.type-badge{
+  padding:6px 9px;
+  border:1px solid #d7e5f0;
+  border-radius:999px;
+  color:var(--blue);
+  background:#eef6fb;
+  font-size:.72rem;
+  font-weight:900;
+  letter-spacing:.06em;
+}
+
+.type-badge.pdf{
+  color:#a32634;
+  border-color:#f0d2d6;
+  background:#fff1f2;
+}
+
+.item h2{
+  margin:0;
+  min-height:78px;
+  color:#121d2d;
+  font-size:1.14rem;
+  line-height:1.48;
+  letter-spacing:-.018em;
+  overflow-wrap:anywhere;
+}
+
+.card-meta{
+  margin-top:12px;
+  display:flex;
+  align-items:center;
+  gap:7px;
+  color:var(--muted);
+  font-size:.83rem;
+}
+
+.card-meta-dot{
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#77a6c9;
+}
+
+.open-button{
+  width:100%;
+  min-height:48px;
+  margin-top:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  border:0;
+  border-radius:13px;
+  color:#fff;
+  background:linear-gradient(135deg,var(--blue),#143f67);
+  font-weight:900;
+  cursor:pointer;
+  box-shadow:0 9px 20px rgba(23,77,124,.16);
+  transition:.2s ease;
+}
+
+.open-button:hover{
+  transform:translateY(-1px);
+  background:linear-gradient(135deg,#1b598f,var(--blue-hover));
+  box-shadow:0 12px 25px rgba(23,77,124,.22);
+}
+
+.open-button svg{
+  width:17px;
+  height:17px;
+}
+
+/* EMPTY */
+.empty-state{
+  display:none;
+  padding:60px 22px;
+  border:1px dashed #c5d1dd;
+  border-radius:24px;
+  background:rgba(255,255,255,.65);
+  text-align:center;
+}
+
+.empty-state.show{display:block}
+
+.empty-icon{
+  width:72px;
+  height:72px;
+  margin:0 auto 16px;
+  display:grid;
+  place-items:center;
+  border-radius:22px;
+  color:var(--blue);
+  background:#e8f1f8;
+}
+
+.empty-icon svg{
+  width:34px;
+  height:34px;
+}
+
+.empty-state h3{
+  margin:0 0 8px;
+  font-size:1.3rem;
+}
+
+.empty-state p{
+  margin:0;
+  color:var(--muted);
+}
+
+/* VIEWER */
+#viewer{
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:100;
+  background:#fff;
+}
+
+.viewerbar{
+  height:64px;
+  padding:0 16px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  color:#fff;
+  background:var(--navy);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.viewer-title-wrap{
+  min-width:0;
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.viewer-doc-icon{
+  width:34px;
+  height:38px;
+  flex:0 0 34px;
+  display:grid;
+  place-items:center;
+  border-radius:7px;
+  color:#fff;
+  background:#1681c2;
+  font-size:.65rem;
+  font-weight:900;
+}
+
+#viewerTitle{
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  font-weight:800;
+}
+
+.viewer-actions{
+  display:flex;
+  gap:8px;
+  align-items:center;
+}
+
+.viewerbar button{
+  min-height:40px;
+  padding:0 13px;
+  border:0;
+  border-radius:10px;
+  color:#172033;
+  background:var(--gold);
+  font-weight:900;
+  cursor:pointer;
+}
+
+.viewerbar button.secondary{
+  color:#fff;
+  border:1px solid rgba(255,255,255,.16);
+  background:rgba(255,255,255,.08);
+}
+
+iframe{
+  width:100%;
+  height:calc(100vh - 64px);
+  border:0;
+  background:#fff;
+}
+
+@keyframes cardIn{
+  from{opacity:0;transform:translateY(10px)}
+  to{opacity:1;transform:none}
+}
+
+@media(max-width:900px){
+  .login-shell{grid-template-columns:1fr}
+  .login-intro{display:none}
+  .login-panel{min-height:520px}
+  .library-hero{grid-template-columns:1fr}
+  .library-stat{display:none}
+  .search-panel{
+    position:relative;
+    top:auto;
+    grid-template-columns:1fr;
+  }
+  .filter-group{justify-content:stretch}
+  .filter-btn{flex:1}
+}
+
+@media(max-width:620px){
+  .app-header-inner,
+  .library-main{
+    width:min(100% - 24px,var(--max));
+  }
+
+  .app-header-inner{min-height:67px}
+
+  .app-brand strong{font-size:19px}
+  .app-brand .brand-mark{width:38px;height:38px}
+  .header-count{display:none}
+  .logout{min-height:40px;padding:0 13px}
+
+  .library-main{padding:28px 0 55px}
+  .library-title{font-size:2.15rem}
+  .library-description{font-size:.96rem}
+
+  .search-panel{
+    margin-left:-2px;
+    margin-right:-2px;
+    padding:10px;
+    border-radius:17px;
+  }
+
+  .filter-btn{padding:0 8px;font-size:.82rem}
+  .keyboard-hint{display:none}
+  .grid{grid-template-columns:1fr;gap:15px}
+  .item{min-height:238px;padding:20px}
+  .item h2{min-height:auto;margin-bottom:18px}
+
+  .viewerbar{height:58px;padding:0 10px}
+  .viewer-doc-icon{display:none}
+  .viewerbar button{padding:0 10px;font-size:.86rem}
+  iframe{height:calc(100vh - 58px)}
+}
+
+@media(prefers-reduced-motion:reduce){
+  *{scroll-behavior:auto!important;animation:none!important;transition:none!important}
+}
 </style>
 </head>
+
 <body>
+
+<!-- ĐĂNG NHẬP -->
 <section id="login">
-  <form class="card" id="form" autocomplete="off">
-    <div class="logo">KS</div>
-    <h1>Kim Sun</h1>
-    <p class="sub">Nhập mật khẩu để xem nội dung riêng tư.</p>
-    <label for="password">Mật khẩu</label>
-    <div class="pw"><input id="password" type="password" required autocomplete="current-password"></div>
-    <button class="primary" id="submit" type="submit">Đăng nhập</button>
-    <div class="msg" id="msg"></div>
-  </form>
+  <div class="login-shell">
+    <div class="login-intro">
+      <div class="brand-lockup">
+        <div class="brand-mark">KS</div>
+        <div class="brand-name">Kim Sun</div>
+      </div>
+
+      <h1>Thư viện nội dung của bạn.</h1>
+      <p>
+      </p>
+    </div>
+
+    <form class="login-panel" id="form" autocomplete="off">
+      <h2>Đăng nhập</h2>
+      <p class="login-note">Nhập mật khẩu để truy cập thư viện nội dung.</p>
+
+      <label class="field-label" for="password">Mật khẩu truy cập</label>
+
+      <div class="password-wrap">
+        <input
+          class="password-input"
+          id="password"
+          type="password"
+          required
+          autocomplete="current-password"
+          placeholder="Nhập mật khẩu"
+        >
+
+        <button
+          class="toggle-password"
+          id="togglePassword"
+          type="button"
+          aria-label="Hiện hoặc ẩn mật khẩu"
+          title="Hiện hoặc ẩn mật khẩu"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12Z"/>
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        </button>
+      </div>
+
+      <button class="login-button" id="submit" type="submit">
+        Truy cập thư viện
+      </button>
+
+      <div class="msg" id="msg" aria-live="polite"></div>
+    </form>
+  </div>
 </section>
 
+<!-- THƯ VIỆN -->
 <section id="app">
-  <header><strong>Kim Sun</strong><button class="logout" id="logout">Đăng xuất</button></header>
-  <main><h1 style="text-align:left">Thư viện nội dung</h1><p>Chọn một tài liệu để xem.</p><div class="grid" id="grid"></div></main>
+  <header class="app-header">
+    <div class="app-header-inner">
+      <div class="app-brand">
+        <div class="brand-mark">KS</div>
+        <strong>Kim Sun</strong>
+      </div>
+
+      <div class="header-actions">
+        <span class="header-count" id="headerCount">0 tài liệu</span>
+        <button class="logout" id="logout" type="button">Đăng xuất</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="library-main">
+    <section class="library-hero">
+      <div>
+        <span class="library-eyebrow">
+          <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/>
+          </svg>
+          Thư viện riêng tư
+        </span>
+
+        <h1 class="library-title">Thư viện nội dung</h1>
+
+        <p class="library-description">
+          Tìm kiếm và mở nhanh các bài viết HTML hoặc tài liệu PDF
+          đã được bảo vệ bằng mật khẩu.
+        </p>
+      </div>
+
+      <div class="library-stat">
+        <strong id="totalStat">0</strong>
+        <span>Tài liệu hiện có</span>
+      </div>
+    </section>
+
+    <section class="search-panel" aria-label="Tìm kiếm tài liệu">
+      <div class="search-box">
+        <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m20 20-3.7-3.7"/>
+        </svg>
+
+        <input
+          id="searchInput"
+          type="search"
+          placeholder="Tìm theo tên tài liệu…"
+          autocomplete="off"
+          aria-label="Tìm kiếm tài liệu"
+        >
+
+        <button
+          class="clear-search"
+          id="clearSearch"
+          type="button"
+          aria-label="Xóa nội dung tìm kiếm"
+          title="Xóa tìm kiếm"
+        >×</button>
+      </div>
+
+      <div class="filter-group" role="group" aria-label="Lọc loại tài liệu">
+        <button class="filter-btn active" type="button" data-type="all">Tất cả</button>
+        <button class="filter-btn" type="button" data-type="html">HTML</button>
+        <button class="filter-btn" type="button" data-type="pdf">PDF</button>
+      </div>
+    </section>
+
+    <div class="results-row">
+      <span id="resultCount">Đang tải tài liệu…</span>
+      <span class="keyboard-hint">Nhấn <kbd>/</kbd> để tìm kiếm nhanh</span>
+    </div>
+
+    <section class="grid" id="grid" aria-live="polite"></section>
+
+    <section class="empty-state" id="emptyState">
+      <div class="empty-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="11" cy="11" r="7"/>
+          <path d="m20 20-3.7-3.7"/>
+          <path d="M8.5 11h5"/>
+        </svg>
+      </div>
+      <h3>Không tìm thấy tài liệu</h3>
+      <p>Hãy thử từ khóa khác hoặc chuyển sang bộ lọc “Tất cả”.</p>
+    </section>
+  </main>
 </section>
 
+<!-- TRÌNH XEM -->
 <section id="viewer">
   <div class="viewerbar">
-    <span id="viewerTitle"></span>
-    <div style="display:flex;gap:8px;align-items:center">
-      <button id="openPdfTab" type="button" style="display:none">Mở tab mới</button>
+    <div class="viewer-title-wrap">
+      <div class="viewer-doc-icon" id="viewerDocIcon">DOC</div>
+      <span id="viewerTitle"></span>
+    </div>
+
+    <div class="viewer-actions">
+      <button
+        class="secondary"
+        id="openPdfTab"
+        type="button"
+        style="display:none"
+      >Mở tab mới</button>
+
       <button id="closeViewer" type="button">Đóng</button>
     </div>
   </div>
+
   <iframe id="frame" title="Trình xem tài liệu"></iframe>
 </section>
 
 <script>
 const MANIFEST="6228ecd2436810ca844cde6a.dat";
-const $=s=>document.querySelector(s);
+const $=selector=>document.querySelector(selector);
+
 let sessionPassword="";
 let manifest=[];
 let activeObjectUrl="";
+let activeFilter="all";
+let searchQuery="";
 
-function b64(s){return Uint8Array.from(atob(s),c=>c.charCodeAt(0));}
+function b64(value){
+  return Uint8Array.from(atob(value),character=>character.charCodeAt(0));
+}
 
 async function decryptPayloadBytes(payload,password){
-  const enc=new TextEncoder();
+  const encoder=new TextEncoder();
+
   const keyMaterial=await crypto.subtle.importKey(
-    "raw",enc.encode(password),{name:"PBKDF2"},false,["deriveKey"]
+    "raw",
+    encoder.encode(password),
+    {name:"PBKDF2"},
+    false,
+    ["deriveKey"]
   );
+
   const key=await crypto.subtle.deriveKey(
-    {name:"PBKDF2",salt:b64(payload.s),iterations:310000,hash:"SHA-256"},
-    keyMaterial,{name:"AES-GCM",length:256},false,["decrypt"]
+    {
+      name:"PBKDF2",
+      salt:b64(payload.s),
+      iterations:310000,
+      hash:"SHA-256"
+    },
+    keyMaterial,
+    {name:"AES-GCM",length:256},
+    false,
+    ["decrypt"]
   );
+
   const plain=await crypto.subtle.decrypt(
-    {name:"AES-GCM",iv:b64(payload.i)},key,b64(payload.d)
+    {name:"AES-GCM",iv:b64(payload.i)},
+    key,
+    b64(payload.d)
   );
+
   return new Uint8Array(plain);
 }
 
 async function loadEncryptedBytes(name,password){
-  const res=await fetch(name,{cache:"no-store"});
-  if(!res.ok) throw new Error("Không tải được dữ liệu");
-  return decryptPayloadBytes(await res.json(),password);
+  const response=await fetch(name,{cache:"no-store"});
+
+  if(!response.ok){
+    throw new Error("Không tải được dữ liệu");
+  }
+
+  return decryptPayloadBytes(await response.json(),password);
 }
 
 async function loadEncryptedText(name,password){
@@ -97,60 +1109,85 @@ async function loadEncryptedText(name,password){
   return new TextDecoder().decode(bytes);
 }
 
+function normalizeText(value){
+  return String(value||"")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/đ/g,"d")
+    .replace(/Đ/g,"D")
+    .toLowerCase()
+    .trim();
+}
+
+function escapeHtml(value){
+  return String(value)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
 function prepareDocumentHtml(html){
-  const navigationFix = `
+  const navigationFix=`
 <script>
-(function () {
-  function decodeTarget(value) {
-    try { return decodeURIComponent(value); }
-    catch (e) { return value; }
+(function(){
+  function decodeTarget(value){
+    try{return decodeURIComponent(value)}
+    catch(error){return value}
   }
 
-  document.addEventListener("click", function (event) {
-    const link = event.target.closest("a[href]");
-    if (!link) return;
-    const href = link.getAttribute("href") || "";
+  document.addEventListener("click",function(event){
+    const link=event.target.closest("a[href]");
+    if(!link)return;
 
-    if (href.charAt(0) === "#") {
+    const href=link.getAttribute("href")||"";
+
+    if(href.charAt(0)==="#"){
       event.preventDefault();
       event.stopPropagation();
 
-      const id = decodeTarget(href.slice(1));
-      if (!id) {
+      const id=decodeTarget(href.slice(1));
+
+      if(!id){
         document.documentElement.scrollTo({top:0,behavior:"smooth"});
         return;
       }
 
-      const target =
-        document.getElementById(id) ||
-        document.querySelector('[name="' + CSS.escape(id) + '"]');
+      const target=
+        document.getElementById(id)||
+        document.querySelector('[name="'+CSS.escape(id)+'"]');
 
-      if (target) {
+      if(target){
         target.scrollIntoView({behavior:"smooth",block:"start"});
-        try { history.replaceState(null,"","#"+encodeURIComponent(id)); }
-        catch (e) {}
+
+        try{
+          history.replaceState(null,"","#"+encodeURIComponent(id));
+        }catch(error){}
       }
     }
-  }, true);
+  },true);
 
-  document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('a[target="_top"],a[target="_parent"]').forEach(function (link) {
-      link.removeAttribute("target");
-    });
+  document.addEventListener("DOMContentLoaded",function(){
+    document
+      .querySelectorAll('a[target="_top"],a[target="_parent"]')
+      .forEach(function(link){
+        link.removeAttribute("target");
+      });
   });
 })();
 <\/script>`;
 
-  if (/<\/body\s*>/i.test(html)) {
+  if(/<\/body\s*>/i.test(html)){
     return html.replace(/<\/body\s*>/i,navigationFix+"</body>");
   }
+
   return html+navigationFix;
 }
 
 function clearViewerContent(){
   $("#openPdfTab").style.display="none";
   $("#openPdfTab").onclick=null;
-
   $("#frame").removeAttribute("src");
   $("#frame").srcdoc="";
 
@@ -160,93 +1197,266 @@ function clearViewerContent(){
   }
 }
 
-function render(){
-  $("#grid").innerHTML="";
-  manifest.forEach((x,i)=>{
-    const el=document.createElement("article");
-    el.className="item";
-    const icon=x.type==="pdf"?"📕":"📘";
-    const buttonText=x.type==="pdf"?"Xem PDF":"Mở tài liệu";
-    el.innerHTML=`<div class="ico">${icon}</div><h2></h2><button type="button">${buttonText}</button>`;
-    el.querySelector("h2").textContent=x.title;
-    el.querySelector("button").onclick=()=>openDoc(i);
-    $("#grid").appendChild(el);
-  });
+function getFilteredDocuments(){
+  const normalizedQuery=normalizeText(searchQuery);
+
+  return manifest
+    .map((document,index)=>({...document,index}))
+    .filter(document=>{
+      const type=String(document.type||"html").toLowerCase();
+      const matchesType=activeFilter==="all"||type===activeFilter;
+      const matchesQuery=
+        !normalizedQuery||
+        normalizeText(document.title).includes(normalizedQuery);
+
+      return matchesType&&matchesQuery;
+    });
 }
 
-async function openDoc(i){
-  const x=manifest[i];
+function updateSearchUi(filteredCount){
+  const total=manifest.length;
+  const searching=Boolean(searchQuery.trim())||activeFilter!=="all";
+
+  $("#headerCount").textContent=`${total} tài liệu`;
+  $("#totalStat").textContent=total;
+
+  if(searching){
+    $("#resultCount").innerHTML=
+      `Tìm thấy <strong>${filteredCount}</strong> trong ${total} tài liệu`;
+  }else{
+    $("#resultCount").innerHTML=
+      `Hiển thị <strong>${total}</strong> tài liệu`;
+  }
+
+  $("#clearSearch").classList.toggle("show",Boolean(searchQuery));
+  $("#emptyState").classList.toggle("show",filteredCount===0);
+}
+
+function createDocumentCard(item,position){
+  const type=String(item.type||"html").toLowerCase();
+  const isPdf=type==="pdf";
+  const article=window.document.createElement("article");
+
+  article.className="item";
+  article.style.animationDelay=`${Math.min(position*35,280)}ms`;
+
+  article.innerHTML=`
+    <div class="card-top">
+      <div class="doc-icon ${isPdf?"pdf":""}">
+        ${isPdf?"PDF":"HTML"}
+      </div>
+
+      <span class="type-badge ${isPdf?"pdf":""}">
+        ${isPdf?"PDF":"HTML"}
+      </span>
+    </div>
+
+    <h2>${escapeHtml(item.title)}</h2>
+
+    <div class="card-meta">
+      <span class="card-meta-dot"></span>
+      <span>${isPdf?"Tài liệu PDF":"Bài viết tương tác"}</span>
+    </div>
+
+    <button class="open-button" type="button">
+      <span>${isPdf?"Xem PDF":"Mở tài liệu"}</span>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M5 12h14"/>
+        <path d="m13 6 6 6-6 6"/>
+      </svg>
+    </button>
+  `;
+
+  article.querySelector(".open-button").onclick=()=>openDoc(item.index);
+
+  return article;
+}
+
+function render(){
+  const filteredDocuments=getFilteredDocuments();
+  const grid=$("#grid");
+
+  grid.innerHTML="";
+
+  filteredDocuments.forEach((document,index)=>{
+    grid.appendChild(createDocumentCard(document,index));
+  });
+
+  updateSearchUi(filteredDocuments.length);
+}
+
+async function openDoc(index){
+  const item=manifest[index];
+  const type=String(item.type||"html").toLowerCase();
+  const isPdf=type==="pdf";
+
   clearViewerContent();
-  $("#viewerTitle").textContent=x.title;
+
+  $("#viewerTitle").textContent=item.title;
+  $("#viewerDocIcon").textContent=isPdf?"PDF":"HTML";
+  $("#viewerDocIcon").style.background=isPdf?"#bb2d3b":"#1681c2";
   $("#viewer").style.display="block";
-  $("#frame").srcdoc="<p style='font-family:Arial;padding:30px'>Đang giải mã nội dung...</p>";
+  window.document.body.style.overflow="hidden";
+
+  $("#frame").srcdoc=`
+    <div style="font-family:Segoe UI,Arial,sans-serif;padding:35px;color:#425168">
+      Đang giải mã nội dung…
+    </div>
+  `;
 
   try{
-    if(x.type==="pdf"){
-      const bytes=await loadEncryptedBytes(x.file,sessionPassword);
+    if(isPdf){
+      const bytes=await loadEncryptedBytes(item.file,sessionPassword);
       const blob=new Blob([bytes],{type:"application/pdf"});
       activeObjectUrl=URL.createObjectURL(blob);
-
       const pdfUrl=activeObjectUrl+"#toolbar=1&navpanes=1&view=FitH";
+
       $("#frame").srcdoc="";
       $("#frame").src=pdfUrl;
 
-      $("#openPdfTab").style.display="inline-block";
+      $("#openPdfTab").style.display="inline-flex";
       $("#openPdfTab").onclick=()=>{
         window.open(pdfUrl,"_blank","noopener,noreferrer");
       };
     }else{
-      const documentHtml=await loadEncryptedText(x.file,sessionPassword);
+      const documentHtml=await loadEncryptedText(
+        item.file,
+        sessionPassword
+      );
+
       $("#frame").srcdoc=prepareDocumentHtml(documentHtml);
     }
-  }catch(e){
-    $("#frame").srcdoc="<p style='font-family:Arial;padding:30px;color:#b91c1c'>Không thể mở tài liệu.</p>";
+  }catch(error){
+    $("#frame").srcdoc=`
+      <div style="font-family:Segoe UI,Arial,sans-serif;padding:35px;color:#b42333">
+        Không thể mở tài liệu. Vui lòng đóng và thử lại.
+      </div>
+    `;
   }
 }
 
-$("#form").addEventListener("submit",async e=>{
-  e.preventDefault();
-  const pass=$("#password").value;
-  $("#submit").disabled=true;
-  $("#submit").textContent="Đang kiểm tra...";
+function closeViewer(){
+  clearViewerContent();
+  $("#viewer").style.display="none";
+  document.body.style.overflow="";
+}
+
+$("#form").addEventListener("submit",async event=>{
+  event.preventDefault();
+
+  const password=$("#password").value;
+  const submitButton=$("#submit");
+
+  submitButton.disabled=true;
+  submitButton.textContent="Đang kiểm tra…";
   $("#msg").textContent="";
 
   try{
-    manifest=JSON.parse(await loadEncryptedText(MANIFEST,pass));
-    sessionPassword=pass;
+    manifest=JSON.parse(await loadEncryptedText(MANIFEST,password));
+    sessionPassword=password;
+    activeFilter="all";
+    searchQuery="";
+
+    $("#searchInput").value="";
+    document.querySelectorAll(".filter-btn").forEach(button=>{
+      button.classList.toggle(
+        "active",
+        button.dataset.type==="all"
+      );
+    });
+
     render();
+
     $("#login").style.display="none";
     $("#app").style.display="block";
     $("#password").value="";
-  }catch(err){
+    window.scrollTo(0,0);
+  }catch(error){
     $("#msg").textContent="Mật khẩu không chính xác.";
     $("#password").value="";
     $("#password").focus();
   }finally{
-    $("#submit").disabled=false;
-    $("#submit").textContent="Đăng nhập";
+    submitButton.disabled=false;
+    submitButton.textContent="Truy cập thư viện";
   }
 });
 
-$("#closeViewer").onclick=()=>{
-  clearViewerContent();
-  $("#viewer").style.display="none";
-};
+$("#togglePassword").addEventListener("click",()=>{
+  const passwordInput=$("#password");
+  const showing=passwordInput.type==="text";
+  passwordInput.type=showing?"password":"text";
+  $("#togglePassword").setAttribute(
+    "aria-label",
+    showing?"Hiện mật khẩu":"Ẩn mật khẩu"
+  );
+});
 
-$("#logout").onclick=()=>{
-  clearViewerContent();
+$("#searchInput").addEventListener("input",event=>{
+  searchQuery=event.target.value;
+  render();
+});
+
+$("#clearSearch").addEventListener("click",()=>{
+  searchQuery="";
+  $("#searchInput").value="";
+  $("#searchInput").focus();
+  render();
+});
+
+document.querySelectorAll(".filter-btn").forEach(button=>{
+  button.addEventListener("click",()=>{
+    activeFilter=button.dataset.type;
+
+    document.querySelectorAll(".filter-btn").forEach(item=>{
+      item.classList.toggle("active",item===button);
+    });
+
+    render();
+  });
+});
+
+$("#closeViewer").addEventListener("click",closeViewer);
+
+$("#logout").addEventListener("click",()=>{
+  closeViewer();
+
   sessionPassword="";
   manifest=[];
+  searchQuery="";
+  activeFilter="all";
+
   $("#grid").innerHTML="";
+  $("#searchInput").value="";
   $("#app").style.display="none";
-  $("#viewer").style.display="none";
   $("#login").style.display="grid";
   $("#password").focus();
-};
+});
 
-document.addEventListener("keydown",e=>{
-  if(e.key==="Escape"&&$("#viewer").style.display==="block"){
-    $("#closeViewer").click();
+document.addEventListener("keydown",event=>{
+  const viewerOpen=$("#viewer").style.display==="block";
+
+  if(event.key==="Escape"&&viewerOpen){
+    closeViewer();
+    return;
+  }
+
+  if(
+    event.key==="/" &&
+    !viewerOpen &&
+    $("#app").style.display==="block" &&
+    document.activeElement.tagName!=="INPUT"
+  ){
+    event.preventDefault();
+    $("#searchInput").focus();
+  }
+
+  if(
+    (event.ctrlKey||event.metaKey) &&
+    event.key.toLowerCase()==="k" &&
+    $("#app").style.display==="block"
+  ){
+    event.preventDefault();
+    $("#searchInput").focus();
   }
 });
 </script>
